@@ -9,12 +9,15 @@
 
   const hero = $(".hero"), stage = $(".stage"), eye = $(".eye"), img = $(".eye img"), shade = $(".shade");
   const head = $(".hero-top"), low = $(".hero-low"), end = $(".hero-end");
-  const EX = .436, EY = .61, RATIO = .75; // posição da íris na foto
+  const EX = .557, EY = .56, RATIO = .5625, SPAN = .58; // posição da íris e largura do olho na foto
   const born = performance.now();
   let vw, vh, cx, cy, W, lastP = -1, lastO = -1;
   const size = () => {
     vw = stage.clientWidth; vh = stage.clientHeight; cx = vw / 2; cy = vh * .55;
-    W = Math.max(vw / 2 / EX, cy / (EY * RATIO), (vh - cy) / ((1 - EY) * RATIO)) * 1.02;
+    const tall = vh > vw;
+    // No celular a foto vira uma faixa inteira, sem ampliar demais.
+    W = tall ? vw * 2 : Math.max(vw / 2 / (1 - EX), cy / (EY * RATIO), (vh - cy) / ((1 - EY) * RATIO)) * 1.02;
+    eye.classList.toggle("band", tall);
     img.style.width = W + "px";
     img.style.left = cx - EX * W + "px";
     img.style.top = cy - EY * RATIO * W + "px";
@@ -27,10 +30,11 @@
     if (p !== lastP || o !== lastO) {
       lastP = p; lastO = o;
       const t = Math.pow(clamp(p / .75), 1.7);
-      const w0 = Math.min(vw * .45, 430), h0 = Math.min(w0 * .5, vh * .17);
-      const k0 = Math.min(1, w0 * 1.75 / (W * .38));
+      const w0 = Math.min(vw * .45, 430), h0 = Math.min(w0 * .6, vh * .2);
+      const k0 = Math.min(1, Math.max(w0 * 1.02 / ((1 - EX) * W), Math.min(w0 * 1.75 / (W * SPAN), h0 / (.2 * W))));
       eye.style.clipPath = t >= 1 ? "none" : almond(cx, cy, mix(w0, vw * 1.6, t), mix(h0 * o + 1, vh * 1.5, t), mix(h0 * .85 * o + 1, vh * 1.5, t));
-      img.style.transform = `scale(${mix(k0, 1, t)})`;
+      const z = clamp(t / (vh > vw ? 1 : .13)); // a foto cresce antes da abertura, para não mostrar a borda
+      img.style.transform = `scale(${mix(k0, 1, z * z * (3 - 2 * z))})`;
       const gone = 1 - clamp(p / .22);
       head.style.opacity = low.style.opacity = gone;
       low.style.visibility = gone ? "" : "hidden";
@@ -52,6 +56,15 @@
     if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); }
   }), { threshold: .2 });
   $$("[data-rise], .draw").forEach(e => io.observe(e));
+
+  // Apresentação: cada fala acende ao chegar no meio da tela e a foto se aproxima devagar.
+  const says = $$(".say"), ana = $(".ana"), portrait = $(".ana-photo img");
+  const talk = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("on", e.isIntersecting)), { rootMargin: "-25% 0px -25%" });
+  says.forEach(e => talk.observe(e));
+  if (!still) addEventListener("scroll", () => {
+    const r = ana.getBoundingClientRect();
+    if (r.top < innerHeight && r.bottom > 0) portrait.style.transform = `scale(${1.08 - .08 * clamp((innerHeight - r.top) / r.height)})`;
+  }, { passive: true });
 
   const tabs = $$(".tabs a");
   const spy = new IntersectionObserver(es => es.forEach(e => {
