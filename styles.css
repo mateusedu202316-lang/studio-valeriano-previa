@@ -98,6 +98,7 @@ summary span{transition:transform .4s var(--ease)}summary:hover span{transform:t
 .say{min-height:82svh;display:flex;flex-direction:column;justify-content:center;transition:opacity .6s}.say:last-child{min-height:100svh}
 .js .say{opacity:.22}.js .say.on{opacity:1}
 .say h2{max-width:9em;font-size:clamp(40px,5vw,76px)}.say p{margin-top:22px;max-width:27em;font-size:20px;color:#ddd8d4}
+.say p.big{margin-top:0;max-width:24em;font:400 clamp(25px,2.5vw,38px)/1.35 var(--cap);color:#fff}
 .ana-act{display:flex;flex-wrap:wrap;align-items:center;gap:16px 30px;margin-top:32px}.link{font-weight:700;text-underline-offset:6px}
 .faq{display:grid;grid-template-columns:4fr 7fr;gap:40px;padding-block:20px clamp(80px,10vw,140px)}
 .qa p{padding:0 40px 24px 0;color:var(--mute)}
@@ -109,6 +110,8 @@ summary span{transition:transform .4s var(--ease)}summary:hover span{transform:t
 .bar p{flex:1;min-width:0;line-height:1.3;font-size:15px}
 .bar span{display:block;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .clear{border:0;background:none;text-decoration:underline;min-height:44px}
+.fab{position:fixed;z-index:35;right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));width:58px;height:58px;display:grid;place-items:center;border-radius:50%;background:#25d366;color:#fff;border:2px solid #fff;transition:transform .3s var(--ease),visibility .3s}
+.fab svg{width:31px;fill:currentColor}.fab:hover{transform:scale(1.08)}.bar.on~.fab{transform:scale(0);visibility:hidden}
 .light{border:0;padding:0;background:none;max-width:100vw;max-height:100vh}
 .light::backdrop{background:rgba(10,10,10,.93)}
 .light img{max-width:92vw;max-height:86svh}

@@ -85,7 +85,7 @@
 
   // Lista de procedimentos. O link do WhatsApp dela não aceita texto pronto, por isso copiamos.
   const picked = new Set(), bar = $(".bar"), adds = $$("[data-add]"), send = $(".bar .btn");
-  const message = () => `Oi, Ana Julia! Vim pelo site e quero saber sobre: ${[...picked].join(", ")}.`;
+  const message = () => `Oi, Ana Júlia! Vim pelo site e quero saber sobre: ${[...picked].join(", ")}.`;
   const refresh = () => {
     adds.forEach(b => {
       const on = picked.has(b.dataset.add);
